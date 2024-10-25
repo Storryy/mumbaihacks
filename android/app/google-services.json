@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "796211987220",
+    "project_id": "safe-circle-mumbai-hacks",
+    "storage_bucket": "safe-circle-mumbai-hacks.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:796211987220:android:5da7cf1e2463de6ac3f801",
+        "android_client_info": {
+          "package_name": "com.safecircle.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7dQrkqL33dNLaGNl0Y29COxvQ9AdPHHg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
