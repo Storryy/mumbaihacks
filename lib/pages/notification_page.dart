@@ -7,7 +7,9 @@ import 'map_page.dart';
 import 'nearby_chat_page.dart';
 
 class NotificationsPage extends StatefulWidget {
-  const NotificationsPage({super.key});
+  final String userId;
+
+  const NotificationsPage({super.key, required this.userId});
 
   @override
   State<NotificationsPage> createState() => _NotificationsPageState();
@@ -40,7 +42,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 if (ModalRoute.of(context)?.settings.name != ChatPage.routeName) {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const ChatPage()),
+                    MaterialPageRoute(builder: (context) => ChatPage(userId: widget.userId)),
                   );
                 }
               },
@@ -51,7 +53,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const SosChatPage()),
+                  MaterialPageRoute(builder: (context) => SosChatPage(userId: widget.userId)),
                 );
 
               },
@@ -63,7 +65,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const MapPage()),
+                  MaterialPageRoute(builder: (context) => MapPage(userId: widget.userId)),
                 );
               },
             ),
@@ -80,7 +82,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const NearbyChatPage()),
+                  MaterialPageRoute(builder: (context) => NearbyChatPage(userId: widget.userId)),
                 );
               },
             ),

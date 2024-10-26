@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mumbaihacks/pages/sos_chat_page.dart';
 import '../services/chat_history.dart';
@@ -7,16 +8,24 @@ import 'notification_page.dart';
 import 'nearby_chat_page.dart';
 
 class ChatPage extends StatefulWidget {
+
   static const routeName = '/chat';
 
-  const ChatPage({super.key});
+  final String userId;
+
+  const ChatPage({super.key, required this.userId});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
-  ChatHistory chatHistory = ChatHistory();
+
+  void signUserOut() {
+    FirebaseAuth.instance.signOut();
+  }
+
+  ChatHistory? chatHistory;
 
   // Class-level messages list
   List<Map<String, dynamic>> messages = [
@@ -27,9 +36,10 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     super.initState();
-    chatHistory.loadChatHistory().then((_) {
+    chatHistory = ChatHistory(userId: widget.userId); // Initialize with widget.userId
+    chatHistory!.loadChatHistory().then((_) {
       setState(() {
-        messages = chatHistory.messages; // Load chat history into the messages list
+        messages = chatHistory!.messages; // Load chat history into the messages list
       });
     });
   }
@@ -45,7 +55,9 @@ class _ChatPageState extends State<ChatPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.person, color: Colors.black),
-            onPressed: () {},
+            onPressed: () {
+              signUserOut();
+            },
           ),
         ],
         elevation: 0,
@@ -68,7 +80,7 @@ class _ChatPageState extends State<ChatPage> {
                 if (ModalRoute.of(context)?.settings.name != ChatPage.routeName) {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const ChatPage()),
+                    MaterialPageRoute(builder: (context) => ChatPage(userId: widget.userId)),
                   );
                 } else {
                   Navigator.pop(context); // Close drawer if already on the page
@@ -81,7 +93,7 @@ class _ChatPageState extends State<ChatPage> {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const SosChatPage()),
+                  MaterialPageRoute(builder: (context) => SosChatPage(userId: widget.userId)),
                 );
               },
             ),
@@ -92,7 +104,7 @@ class _ChatPageState extends State<ChatPage> {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const MapPage()),
+                  MaterialPageRoute(builder: (context) => MapPage(userId: widget.userId)),
                 );
               },
             ),
@@ -102,7 +114,7 @@ class _ChatPageState extends State<ChatPage> {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const NotificationsPage()),
+                  MaterialPageRoute(builder: (context) => NotificationsPage(userId: widget.userId)),
                 );
               },
             ),
@@ -112,7 +124,7 @@ class _ChatPageState extends State<ChatPage> {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const NearbyChatPage()),
+                  MaterialPageRoute(builder: (context) => NearbyChatPage(userId: widget.userId)),
                 );
               },
             ),
@@ -154,7 +166,7 @@ class _ChatPageState extends State<ChatPage> {
                     final query = _controller.text;
                     sendMessage(); // Add user message first
                     if (query.isNotEmpty) {
-                      await SendQuery(chatHistory).sendQueryToOllama(query);
+                      await SendQuery(chatHistory!).sendQueryToOllama(query);
                       setState(() {});
                     }
                   },

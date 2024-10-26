@@ -1,10 +1,16 @@
-import 'dart:convert';
-
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ChatHistory {
-  List<Map<String, dynamic>> _messages = [{'text': 'Hello! How can I assist you today?', 'isBot': true},
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final String userId;  // You can pass the userId during initialization
+
+  ChatHistory({required this.userId});
+
+  List<Map<String, dynamic>> _messages = [
+    {'text': 'Hello! How can I assist you today?', 'isBot': true},
   ];
+
   List<Map<String, dynamic>> get messages => _messages;
 
   void addMessage(String text, bool isBot) {
@@ -12,20 +18,31 @@ class ChatHistory {
     _saveChatHistory();  // Save after every message
   }
 
+  // Save chat history to Firestore
   Future<void> _saveChatHistory() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String messagesJson = jsonEncode(_messages);
-    await prefs.setString('chat_history', messagesJson);
-  }
-
-  // Load chat history from local storage
-  Future<void> loadChatHistory() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? messagesJson = prefs.getString('chat_history');
-    if (messagesJson != null) {
-      _messages = List<Map<String, dynamic>>.from(jsonDecode(messagesJson));
+    try {
+      await _firestore
+          .collection('chat_history')
+          .doc(userId)  // Store messages per user
+          .set({'messages': _messages});
+    } catch (e) {
+      print("Failed to save chat history: $e");
     }
-    print("messages stored are $_messages");
   }
 
+  // Load chat history from Firestore
+  Future<void> loadChatHistory() async {
+    try {
+      DocumentSnapshot snapshot = await _firestore
+          .collection('chat_history')
+          .doc(userId)
+          .get();
+
+      if (snapshot.exists) {
+        _messages = List<Map<String, dynamic>>.from(snapshot['messages']);
+      }
+    } catch (e) {
+      print("Failed to load chat history: $e");
+    }
+  }
 }
