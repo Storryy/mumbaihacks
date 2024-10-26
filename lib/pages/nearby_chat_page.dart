@@ -31,7 +31,7 @@ class _NearbyChatPageState extends State<NearbyChatPage> {
               decoration: BoxDecoration(
                 color: Color(0xFFE0F7FA),
               ),
-              child: Text('TherapAI Menu', style: TextStyle(color: Colors.black, fontSize: 24)),
+              child: Text('Safe Circle Menu', style: TextStyle(color: Colors.black, fontSize: 24)),
             ),
             // Existing buttons
             ListTile(
