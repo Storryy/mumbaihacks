@@ -8,7 +8,9 @@ import 'nearby_chat_page.dart';
 import 'notification_page.dart'; // Import Geolocator
 
 class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+  final String userId;
+
+  const MapPage({super.key, required this.userId});
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -89,7 +91,7 @@ class _MapPageState extends State<MapPage> {
               decoration: BoxDecoration(
                 color: Color(0xFFE0F7FA),
               ),
-              child: Text('TherapAI Menu', style: TextStyle(color: Colors.black, fontSize: 24)),
+              child: Text('Safe Circle Menu', style: TextStyle(color: Colors.black, fontSize: 24)),
             ),
             // Existing buttons
             ListTile(
@@ -99,7 +101,7 @@ class _MapPageState extends State<MapPage> {
                 if (ModalRoute.of(context)?.settings.name != ChatPage.routeName) {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const ChatPage()),
+                    MaterialPageRoute(builder: (context) => ChatPage(userId: widget.userId)),
                   );
                 }
               },
@@ -110,7 +112,7 @@ class _MapPageState extends State<MapPage> {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const SosChatPage()),
+                  MaterialPageRoute(builder: (context) => SosChatPage(userId: widget.userId)),
                 );
               },
             ),
@@ -128,7 +130,7 @@ class _MapPageState extends State<MapPage> {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const NotificationsPage()),
+                  MaterialPageRoute(builder: (context) => NotificationsPage(userId: widget.userId)),
                 );
               },
             ),
@@ -138,7 +140,7 @@ class _MapPageState extends State<MapPage> {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const NearbyChatPage()),
+                  MaterialPageRoute(builder: (context) => NearbyChatPage(userId: widget.userId)),
                 );
               },
             ),

@@ -1,17 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'package:mumbaihacks/pages/chat_page.dart';
 import 'map_page.dart';
 import 'notification_page.dart';
 import 'nearby_chat_page.dart';
 
 class SosChatPage extends StatefulWidget {
-  const SosChatPage({super.key});
+  final String userId;
+
+  const SosChatPage({super.key, required this.userId});
 
   @override
   State<SosChatPage> createState() => _SosChatPageState();
 }
 
 class _SosChatPageState extends State<SosChatPage> {
+  late final WebViewController controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {
+            // Optional: Update a loading indicator if desired
+          },
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) {},
+          onWebResourceError: (WebResourceError error) {
+            // Handle web resource errors
+          },
+          onNavigationRequest: (NavigationRequest request) {
+            // Prevent navigation to YouTube, for instance
+            if (request.url.startsWith('https://www.youtube.com/')) {
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..loadRequest(
+        Uri.parse('https://2d6f-2409-40c0-104f-25f1-518-a042-2739-1488.ngrok-free.app'),
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,9 +64,8 @@ class _SosChatPageState extends State<SosChatPage> {
               decoration: BoxDecoration(
                 color: Color(0xFFE0F7FA),
               ),
-              child: Text('TherapAI Menu', style: TextStyle(color: Colors.black, fontSize: 24)),
+              child: Text('Safe Circle Menu', style: TextStyle(color: Colors.black, fontSize: 24)),
             ),
-            // Existing buttons
             ListTile(
               leading: const Icon(Icons.edit_note),
               title: const Text('TherapAI'),
@@ -38,7 +73,7 @@ class _SosChatPageState extends State<SosChatPage> {
                 if (ModalRoute.of(context)?.settings.name != ChatPage.routeName) {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const ChatPage()),
+                    MaterialPageRoute(builder: (context) => ChatPage(userId: widget.userId)),
                   );
                 }
               },
@@ -50,14 +85,13 @@ class _SosChatPageState extends State<SosChatPage> {
                 Navigator.pop(context); // Close the drawer if already on SOS Chat
               },
             ),
-            // New buttons
             ListTile(
               leading: const Icon(Icons.map),
               title: const Text('Map'),
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const MapPage()),
+                  MaterialPageRoute(builder: (context) => MapPage(userId: widget.userId)),
                 );
               },
             ),
@@ -67,7 +101,7 @@ class _SosChatPageState extends State<SosChatPage> {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const NotificationsPage()),
+                  MaterialPageRoute(builder: (context) => NotificationsPage(userId: widget.userId)),
                 );
               },
             ),
@@ -77,16 +111,14 @@ class _SosChatPageState extends State<SosChatPage> {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const NearbyChatPage()),
+                  MaterialPageRoute(builder: (context) => NearbyChatPage(userId: widget.userId)),
                 );
               },
             ),
           ],
         ),
       ),
-      body: const Center(
-        child: Text('SOS Chat Page Content'),
-      ),
+      body: WebViewWidget(controller: controller),
       backgroundColor: const Color(0xFFE0F7FA),
     );
   }

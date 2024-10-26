@@ -6,7 +6,9 @@ import 'map_page.dart';
 import 'notification_page.dart';
 
 class NearbyChatPage extends StatefulWidget {
-  const NearbyChatPage({super.key});
+  final String userId;
+
+  const NearbyChatPage({super.key, required this.userId});
 
   @override
   State<NearbyChatPage> createState() => _NearbyChatPageState();
@@ -29,7 +31,7 @@ class _NearbyChatPageState extends State<NearbyChatPage> {
               decoration: BoxDecoration(
                 color: Color(0xFFE0F7FA),
               ),
-              child: Text('TherapAI Menu', style: TextStyle(color: Colors.black, fontSize: 24)),
+              child: Text('Safe Circle Menu', style: TextStyle(color: Colors.black, fontSize: 24)),
             ),
             // Existing buttons
             ListTile(
@@ -39,7 +41,7 @@ class _NearbyChatPageState extends State<NearbyChatPage> {
                 if (ModalRoute.of(context)?.settings.name != ChatPage.routeName) {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const ChatPage()),
+                    MaterialPageRoute(builder: (context) => ChatPage(userId: widget.userId)),
                   );
                 }
               },
@@ -58,7 +60,7 @@ class _NearbyChatPageState extends State<NearbyChatPage> {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const MapPage()),
+                  MaterialPageRoute(builder: (context) => MapPage(userId: widget.userId)),
                 );
               },
             ),
@@ -68,7 +70,7 @@ class _NearbyChatPageState extends State<NearbyChatPage> {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const NotificationsPage()),
+                  MaterialPageRoute(builder: (context) => NotificationsPage(userId: widget.userId)),
                 );
               },
             ),
@@ -78,7 +80,7 @@ class _NearbyChatPageState extends State<NearbyChatPage> {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const NearbyChatPage()),
+                  MaterialPageRoute(builder: (context) => NearbyChatPage(userId: widget.userId)),
                 );
               },
             ),

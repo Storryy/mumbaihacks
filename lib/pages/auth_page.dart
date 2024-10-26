@@ -13,7 +13,8 @@ class AuthPage extends StatelessWidget {
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot){
               if (snapshot.hasData){
-                return ChatPage();
+                final userId = snapshot.data!.uid;
+                return ChatPage(userId: userId);
               }
               else{
                 return const LoginOrRegisterPage();
